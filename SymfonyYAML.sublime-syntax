@@ -1,0 +1,47 @@
+%YAML 1.2
+---
+# See http://www.sublimetext.com/docs/syntax.html
+file_extensions:
+  - services.yaml
+scope: source.yaml.symfony
+version: 2
+extends: Packages/YAML/YAML.sublime-syntax
+
+contexts:
+  flow-scalar-single-quoted-body:
+    - meta_append: true
+    - match: (%)(env)(\()(default::|string:)?(\w+)(\))(%)
+      captures:
+        1: punctuation.definition.variable.begin.symfony
+        2: variable.language.symfony
+        3: punctuation.definition.variable.begin.symfony
+        4: variable.language.symfony
+        5: constant.other.placeholder.symfony
+        6: punctuation.definition.variable.end.symfony
+        7: punctuation.definition.variable.end.symfony
+    - match: (%)([a-z._-]+)(%)
+      captures:
+        1: punctuation.definition.variable.begin.symfony
+        2: variable.language.symfony
+        3: punctuation.definition.variable.end.symfony
+    - match: '@@'
+      scope: constant.character.escape.symfony
+    - match: (@)[a-z][a-zA-Z_-]+(?:\.[a-z_-]+)*\b
+      scope: variable.function.symfony
+      captures:
+        1: punctuation.definition.variable.symfony
+    - match: (@)[A-Z]\w*(?=\\)
+      scope: variable.namespace.php.symfony
+      captures:
+        1: punctuation.definition.variable.symfony
+      push:
+        - scope:source.php#class-name
+    - match: \w+@\w+ # eat email addresses so they don't scope as references
+
+  property-body:
+    - meta_prepend: true
+    - match: '!php/(?:const|enum)(?=\ |\t|$)'
+      scope: storage.type.tag-handle.yaml
+      embed: scope:source.php#single-expression
+      escape: '{{_flow_scalar_end_plain_out}}'
+      pop: 1

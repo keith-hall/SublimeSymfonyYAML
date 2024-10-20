@@ -1,0 +1,221 @@
+# SYNTAX TEST "Packages/SymfonyYAML/SymfonyYAML.sublime-syntax"
+
+https://symfony.com/doc/current/service_container.html#service-parameters
+# config/services.yaml
+services:
+    App\Service\MessageGenerator:
+        arguments:
+            # this is not a string, but a reference to a service called 'logger'
+            - '@logger'
+#           ^ punctuation.definition.block.sequence.item.yaml
+#             ^^^^^^^^^ meta.string.yaml string.quoted.single.yaml
+#             ^ punctuation.definition.string.begin.yaml
+#              ^^^^^^^ variable.function.symfony
+#              ^ punctuation.definition.variable.symfony
+#                     ^ punctuation.definition.string.end.yaml
+
+            # if the value of a string argument starts with '@', you need to escape
+            # it by adding another '@' so Symfony doesn't consider it a service
+            # the following example would be parsed as the string '@securepassword'
+            - '@@securepassword'
+#           ^ punctuation.definition.block.sequence.item.yaml
+#             ^^^^^^^^^^^^^^^^^^ meta.string.yaml string.quoted.single.yaml - variable
+#             ^ punctuation.definition.string.begin.yaml
+#              ^^ constant.character.escape.symfony
+#                              ^ punctuation.definition.string.end.yaml
+            
+services:
+    _defaults:
+        bind:
+            # pass this value to any $adminEmail argument for any service
+            # that's defined in this file (including controller arguments)
+            $adminEmail: 'manager@example.com'
+#           ^^^^^^^^^^^ meta.mapping.key.yaml meta.string.yaml string.unquoted.plain.out.yaml
+#                      ^ meta.mapping.yaml punctuation.separator.key-value.mapping.yaml
+#                        ^^^^^^^^^^^^^^^^^^^^^ meta.string.yaml string.quoted.single.yaml - variable
+#                        ^ punctuation.definition.string.begin.yaml
+#                                            ^ punctuation.definition.string.end.yaml
+
+            # pass this service to any $requestLogger argument for any
+            # service that's defined in this file
+            $requestLogger: '@monolog.logger.request'
+#           ^^^^^^^^^^^^^^ meta.mapping.key.yaml meta.string.yaml string.unquoted.plain.out.yaml
+#                         ^ meta.mapping.yaml punctuation.separator.key-value.mapping.yaml
+#                           ^^^^^^^^^^^^^^^^^^^^^^^^^ meta.string.yaml string.quoted.single.yaml
+#                           ^ punctuation.definition.string.begin.yaml
+#                            ^^^^^^^^^^^^^^^^^^^^^^^ variable.function.symfony
+#                            ^ punctuation.definition.variable.symfony
+#                                                   ^ punctuation.definition.string.end.yaml
+
+            # pass this service for any LoggerInterface type-hint for any
+            # service that's defined in this file
+            Psr\Log\LoggerInterface: '@monolog.logger.request'
+
+            # optionally you can define both the name and type of the argument to match
+            string $adminEmail: 'manager@example.com'
+            Psr\Log\LoggerInterface $requestLogger: '@monolog.logger.request'
+            iterable $rules: !tagged_iterator app.foo.rule
+
+
+services:
+    # ...
+
+    App\Service\MyService:
+        arguments:
+            $rootNamespace: !abstract 'should be defined by Pass'
+
+services:
+    # ... same as before
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/'
+        exclude: '../src/{DependencyInjection,Entity,Kernel.php}' # TODO: scope globs
+
+The value of the resource and exclude options can be any valid glob pattern. If you want to exclude only a few services, you may use the Exclude attribute directly on your class to exclude it.
+
+command_handlers:
+        namespace: App\Domain\
+        resource: '../src/Domain/*/CommandHandler'
+        tags: [command_handler]
+
+    event_subscribers:
+        namespace: App\Domain\
+        resource: '../src/Domain/*/EventSubscriber'
+        tags: [event_subscriber]
+
+services:
+    # ...
+
+    # this is the service's id
+    site_update_manager.superadmin:
+        class: App\Service\SiteUpdateManager
+        # you CAN still use autowiring: we just want to show what it looks like without
+        autowire: false
+        # manually wire all arguments
+        arguments:
+            - '@App\Service\MessageGenerator'
+#           ^ punctuation.definition.block.sequence.item.yaml
+#             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.string.yaml string.quoted.single.yaml
+#             ^ punctuation.definition.string.begin.yaml
+#              ^^^^ variable.namespace.php.symfony
+#              ^ punctuation.definition.variable.symfony
+#                  ^^^^^^^^^^^^^^^^^^^^^^^^^ meta.path.php
+#                  ^ punctuation.accessor.namespace.php
+#                   ^^^^^^^ variable.namespace.php
+#                          ^ punctuation.accessor.namespace.php
+#                           ^^^^^^^^^^^^^^^^ support.class.php
+#                                           ^ punctuation.definition.string.end.yaml
+            - '@mailer'
+            - 'superadmin@example.com'
+
+    site_update_manager.normal_users:
+        class: App\Service\SiteUpdateManager
+        autowire: false
+        arguments:
+            - '@App\Service\MessageGenerator'
+            - '@mailer'
+            - 'contact@example.com'
+
+    # Create an alias, so that - by default - if you type-hint SiteUpdateManager,
+    # the site_update_manager.superadmin will be used
+    App\Service\SiteUpdateManager: '@site_update_manager.superadmin'
+    
+    app.message_formatter:
+        class: App\Service\MessageFormatterInterface # TODO: scope class
+        from_callable: [!service {class: 'App\Service\MessageUtils'}, 'format'] # TODO: scope !service args
+
+
+# config/packages/api_platform.yaml
+api_platform:
+    mapping:
+        paths: ['%kernel.project_dir%/src/Entity']
+#       ^^^^^ meta.mapping.key.yaml meta.string.yaml string.unquoted.plain.out.yaml
+#            ^ meta.mapping.yaml punctuation.separator.key-value.mapping.yaml
+#              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.sequence.flow.yaml
+#              ^ punctuation.definition.sequence.begin.yaml
+#               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.string.yaml string.quoted.single.yaml
+#               ^ punctuation.definition.string.begin.yaml
+#                ^ punctuation.definition.variable.begin.symfony
+#                 ^^^^^^^^^^^^^^^^^^ variable.language.symfony
+#                                   ^ punctuation.definition.variable.end.symfony
+#                                               ^ punctuation.definition.string.end.yaml
+#                                                ^ punctuation.definition.sequence.end.yaml
+
+# config/services.yaml
+parameters:
+    # the parameter name is an arbitrary string (the 'app.' prefix is recommended
+    # to better differentiate your parameters from Symfony parameters).
+    app.admin_email: 'something@example.com'
+
+    # boolean parameters
+    app.enable_v2_protocol: true
+
+    # array/collection parameters
+    app.supported_locales: ['en', 'es', 'fr']
+
+    # binary content parameters (encode the contents with base64_encode())
+    app.some_parameter: !!binary VGhpcyBpcyBhIEJlbGwgY2hhciAH
+
+    # PHP constants as parameter values
+    app.some_constant: !php/const GLOBAL_CONSTANT
+#   ^^^^^^^^^^^^^^^^^ meta.mapping.key.yaml meta.string.yaml string.unquoted.plain.out.yaml
+#                    ^ meta.mapping.yaml punctuation.separator.key-value.mapping.yaml
+#                      ^^^^^^^^^^ storage.type.tag-handle.yaml
+#                                 ^^^^^^^^^^^^^^^ constant.other.php
+    app.another_constant: !php/const App\Entity\BlogPost::MAX_ITEMS
+#   ^^^^^^^^^^^^^^^^^^^^ meta.mapping.key.yaml meta.string.yaml string.unquoted.plain.out.yaml
+#                       ^ meta.mapping.yaml punctuation.separator.key-value.mapping.yaml
+#                         ^^^^^^^^^^ storage.type.tag-handle.yaml
+#                                    ^^^^^^^^^^^^^^^^^^^ meta.path.php
+#                                    ^^^ variable.namespace.php
+#                                       ^ punctuation.accessor.namespace.php
+#                                        ^^^^^^ variable.namespace.php
+#                                              ^ punctuation.accessor.namespace.php
+#                                               ^^^^^^^^ support.class.php
+#                                                       ^^ punctuation.accessor.double-colon.php
+#                                                         ^^^^^^^^^ constant.other.member.php
+
+    # Enum case as parameter values
+    app.some_enum: !php/enum App\Enum\PostState::Published
+#   ^^^^^^^^^^^^^ meta.mapping.key.yaml meta.string.yaml string.unquoted.plain.out.yaml
+#                ^ meta.mapping.yaml punctuation.separator.key-value.mapping.yaml
+#                  ^^^^^^^^^ storage.type.tag-handle.yaml
+#                            ^^^^^^^^^^^^^^^^^^ meta.path.php
+#                            ^^^ variable.namespace.php
+#                               ^ punctuation.accessor.namespace.php
+#                                ^^^^ variable.namespace.php
+#                                    ^ punctuation.accessor.namespace.php
+#                                     ^^^^^^^^^ support.class.php
+#                                              ^^ punctuation.accessor.double-colon.php
+#                                                ^^^^^^^^^ constant.other.member.php
+    
+webpack_encore:
+    # ...
+    output_path: '%kernel.project_dir%/public/build'
+    strict_mode: true
+    cache: false
+
+# cache is enabled only in the "prod" environment
+when@prod:
+    webpack_encore:
+        cache: true
+
+# disable strict mode only in the "test" environment
+when@test:
+    webpack_encore:
+        strict_mode: false
+
+# YAML syntax allows to reuse contents using "anchors" (&some_name) and "aliases" (*some_name).
+# In this example, 'test' configuration uses the exact same configuration as in 'prod'
+when@prod: &webpack_prod
+    webpack_encore:
+        # ...
+when@test: *webpack_prod
+
+parameters:
+    # if the SECRET env var value is not defined anywhere, Symfony uses this value
+    env(SECRET): 'some_secret'
+
+
