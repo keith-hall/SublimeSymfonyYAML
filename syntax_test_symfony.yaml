@@ -217,5 +217,12 @@ when@test: *webpack_prod
 parameters:
     # if the SECRET env var value is not defined anywhere, Symfony uses this value
     env(SECRET): 'some_secret'
-
-
+#   ^^^^^^^^^^^ meta.mapping.key.yaml meta.string.yaml string.unquoted.plain.out.yaml
+#   ^^^ variable.language.symfony
+#      ^ punctuation.definition.variable.begin.symfony
+#       ^^^^^^ constant.other.placeholder.symfony
+#             ^ punctuation.definition.variable.end.symfony
+#              ^ meta.mapping.yaml punctuation.separator.key-value.mapping.yaml
+#                ^^^^^^^^^^^^^ meta.string.yaml string.quoted.single.yaml
+#                ^ punctuation.definition.string.begin.yaml
+#                            ^ punctuation.definition.string.end.yaml

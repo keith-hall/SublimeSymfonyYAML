@@ -45,3 +45,13 @@ contexts:
       embed: scope:source.php#single-expression
       escape: '{{_flow_scalar_end_plain_out}}'
       pop: 1
+
+  flow-scalar-plain-out-body:
+    - meta_append: true
+    - match: (env)(\()(default::|string:)?(\w+)(\))
+      captures:
+        1: variable.language.symfony
+        2: punctuation.definition.variable.begin.symfony
+        3: variable.language.symfony
+        4: constant.other.placeholder.symfony
+        5: punctuation.definition.variable.end.symfony
