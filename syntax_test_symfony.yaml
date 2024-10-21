@@ -1,6 +1,6 @@
 # SYNTAX TEST "Packages/SymfonyYAML/SymfonyYAML.sublime-syntax"
 
-https://symfony.com/doc/current/service_container.html#service-parameters
+# https://symfony.com/doc/current/service_container.html#service-parameters
 # config/services.yaml
 services:
     App\Service\MessageGenerator:
@@ -31,6 +31,8 @@ services:
             # that's defined in this file (including controller arguments)
             $adminEmail: 'manager@example.com'
 #           ^^^^^^^^^^^ meta.mapping.key.yaml meta.string.yaml string.unquoted.plain.out.yaml
+#           ^ punctuation.definition.variable.symfony
+#            ^^^^^^^^^^ variable.other.symfony
 #                      ^ meta.mapping.yaml punctuation.separator.key-value.mapping.yaml
 #                        ^^^^^^^^^^^^^^^^^^^^^ meta.string.yaml string.quoted.single.yaml - variable
 #                        ^ punctuation.definition.string.begin.yaml
@@ -50,17 +52,66 @@ services:
             # pass this service for any LoggerInterface type-hint for any
             # service that's defined in this file
             Psr\Log\LoggerInterface: '@monolog.logger.request'
+#           ^^^^^^^^^^^^^^^^^^^^^^^ meta.mapping.key.yaml meta.string.yaml string.unquoted.plain.out.yaml meta.path.php
+#           ^^^ variable.namespace.php
+#              ^ punctuation.accessor.namespace.php
+#               ^^^ variable.namespace.php
+#                  ^ punctuation.accessor.namespace.php
+#                   ^^^^^^^^^^^^^^^ support.class.php
+#                                  ^ meta.mapping.yaml punctuation.separator.key-value.mapping.yaml
+#                                    ^^^^^^^^^^^^^^^^^^^^^^^^^ meta.string.yaml string.quoted.single.yaml
+#                                    ^ punctuation.definition.string.begin.yaml
+#                                     ^^^^^^^^^^^^^^^^^^^^^^^ variable.function.symfony
+#                                     ^ punctuation.definition.variable.symfony
+#                                                            ^ punctuation.definition.string.end.yaml
 
             # optionally you can define both the name and type of the argument to match
             string $adminEmail: 'manager@example.com'
+#           ^^^^^^^^^^^^^^^^^^ meta.mapping.key.yaml meta.string.yaml string.unquoted.plain.out.yaml
+#           ^^^^^^ storage.type.primitive.php
+#                  ^^^^^^^^^^^ variable.other.php
+#                  ^ punctuation.definition.variable.php
+#                             ^ meta.mapping.yaml punctuation.separator.key-value.mapping.yaml
+#                               ^^^^^^^^^^^^^^^^^^^^^ meta.string.yaml string.quoted.single.yaml
+#                               ^ punctuation.definition.string.begin.yaml
+#                                                   ^ punctuation.definition.string.end.yaml
             Psr\Log\LoggerInterface $requestLogger: '@monolog.logger.request'
+#           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.mapping.key.yaml meta.string.yaml string.unquoted.plain.out.yaml
+#           ^^^^^^^^^^^^^^^^^^^^^^^ meta.path.php
+#           ^^^ variable.namespace.php
+#              ^ punctuation.accessor.namespace.php
+#               ^^^ variable.namespace.php
+#                  ^ punctuation.accessor.namespace.php
+#                   ^^^^^^^^^^^^^^^ constant.other.php
+#                                   ^^^^^^^^^^^^^^ variable.other.php
+#                                   ^ punctuation.definition.variable.php
+#                                                 ^ meta.mapping.yaml punctuation.separator.key-value.mapping.yaml
+#                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^ meta.string.yaml string.quoted.single.yaml
+#                                                   ^ punctuation.definition.string.begin.yaml
+#                                                    ^^^^^^^^^^^^^^^^^^^^^^^ variable.function.symfony
+#                                                    ^ punctuation.definition.variable.symfony
+#                                                                           ^ punctuation.definition.string.end.yaml
             iterable $rules: !tagged_iterator app.foo.rule
+#           ^^^^^^^^^^^^^^^ meta.mapping.key.yaml meta.string.yaml string.unquoted.plain.out.yaml
+#           ^^^^^^^^ constant.other.php
+#                    ^^^^^^ variable.other.php
+#                    ^ punctuation.definition.variable.php
+#                          ^ meta.mapping.yaml punctuation.separator.key-value.mapping.yaml
+#                            ^^^^^^^^^^^^^^^^ meta.property.yaml storage.type.tag-handle.yaml
+#                                             ^^^^^^^^^^^^ meta.string.yaml string.unquoted.plain.out.yaml
 
 
 services:
     # ...
 
     App\Service\MyService:
+#   ^^^^^^^^^^^^^^^^^^^^^ meta.mapping.key.yaml meta.string.yaml string.unquoted.plain.out.yaml meta.path.php
+#   ^^^ variable.namespace.php
+#      ^ punctuation.accessor.namespace.php
+#       ^^^^^^^ variable.namespace.php
+#              ^ punctuation.accessor.namespace.php
+#               ^^^^^^^^^ support.class.php
+#                        ^ meta.mapping.yaml punctuation.separator.key-value.mapping.yaml
         arguments:
             $rootNamespace: !abstract 'should be defined by Pass'
 
@@ -70,13 +121,24 @@ services:
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
     App\:
+#   ^^^^ meta.mapping.key.yaml meta.string.yaml string.unquoted.plain.out.yaml meta.path.php
+#   ^^^ variable.namespace.php
+#      ^ punctuation.accessor.namespace.php
+#       ^ meta.mapping.yaml punctuation.separator.key-value.mapping.yaml
         resource: '../src/'
         exclude: '../src/{DependencyInjection,Entity,Kernel.php}' # TODO: scope globs
 
-The value of the resource and exclude options can be any valid glob pattern. If you want to exclude only a few services, you may use the Exclude attribute directly on your class to exclude it.
+# The value of the resource and exclude options can be any valid glob pattern. If you want to exclude only a few services, you may use the Exclude attribute directly on your class to exclude it.
 
 command_handlers:
         namespace: App\Domain\
+#       ^^^^^^^^^ meta.mapping.key.yaml meta.string.yaml string.unquoted.plain.out.yaml
+#                ^ meta.mapping.yaml punctuation.separator.key-value.mapping.yaml
+#                  ^^^^^^^^^^^ meta.path.php
+#                  ^^^ variable.namespace.php
+#                     ^ punctuation.accessor.namespace.php
+#                      ^^^^^^ variable.namespace.php
+#                            ^ punctuation.accessor.namespace.php
         resource: '../src/Domain/*/CommandHandler'
         tags: [command_handler]
 
@@ -91,6 +153,14 @@ services:
     # this is the service's id
     site_update_manager.superadmin:
         class: App\Service\SiteUpdateManager
+#       ^^^^^ meta.mapping.key.yaml meta.string.yaml string.unquoted.plain.out.yaml
+#            ^ meta.mapping.yaml punctuation.separator.key-value.mapping.yaml
+#              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.path.php
+#              ^^^ variable.namespace.php
+#                 ^ punctuation.accessor.namespace.php
+#                  ^^^^^^^ variable.namespace.php
+#                         ^ punctuation.accessor.namespace.php
+#                          ^^^^^^^^^^^^^^^^^ support.class.php
         # you CAN still use autowiring: we just want to show what it looks like without
         autowire: false
         # manually wire all arguments
@@ -123,8 +193,31 @@ services:
     App\Service\SiteUpdateManager: '@site_update_manager.superadmin'
     
     app.message_formatter:
-        class: App\Service\MessageFormatterInterface # TODO: scope class
-        from_callable: [!service {class: 'App\Service\MessageUtils'}, 'format'] # TODO: scope !service args
+        class: App\Service\MessageFormatterInterface
+        from_callable: [!service {class: 'App\Service\MessageUtils'}, 'format']
+#       ^^^^^^^^^^^^^ meta.mapping.key.yaml meta.string.yaml string.unquoted.plain.out.yaml
+#                    ^ meta.mapping.yaml punctuation.separator.key-value.mapping.yaml
+#                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.sequence.flow.yaml
+#                      ^ punctuation.definition.sequence.begin.yaml
+#                       ^^^^^^^^ meta.property.yaml storage.type.tag-handle.yaml
+#                                ^ meta.mapping.yaml punctuation.definition.mapping.begin.yaml
+#                                 ^^^^^^^^ meta.mapping.key.yaml
+#                                 ^^^^^ meta.string.yaml string.unquoted.plain.in.yaml
+#                                      ^ punctuation.separator.key-value.mapping.yaml
+#                                        ^ meta.string.yaml string.quoted.single.yaml punctuation.definition.string.begin.yaml
+#                                         ^^^^^^^^^^^^^^^^^^^^^^^^ meta.path.php
+#                                         ^^^ variable.namespace.php
+#                                            ^ punctuation.accessor.namespace.php
+#                                             ^^^^^^^ variable.namespace.php
+#                                                    ^ punctuation.accessor.namespace.php
+#                                                     ^^^^^^^^^^^^ support.class.php
+#                                                                 ^ meta.mapping.key.yaml meta.string.yaml string.quoted.single.yaml punctuation.definition.string.end.yaml
+#                                                                  ^ meta.mapping.yaml punctuation.definition.mapping.end.yaml
+#                                                                   ^ punctuation.separator.sequence.yaml
+#                                                                     ^^^^^^^^ meta.string.yaml string.quoted.single.yaml
+#                                                                     ^ punctuation.definition.string.begin.yaml
+#                                                                            ^ punctuation.definition.string.end.yaml
+#                                                                             ^ punctuation.definition.sequence.end.yaml
 
 
 # config/packages/api_platform.yaml

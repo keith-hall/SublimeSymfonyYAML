@@ -47,7 +47,7 @@ contexts:
       pop: 1
 
   flow-scalar-plain-out-body:
-    - meta_append: true
+    - meta_prepend: true
     - match: (env)(\()(default::|string:)?(\w+)(\))
       captures:
         1: variable.language.symfony
@@ -55,3 +55,39 @@ contexts:
         3: variable.language.symfony
         4: constant.other.placeholder.symfony
         5: punctuation.definition.variable.end.symfony
+    - match: (?=(?:\w+\\)*\w+\s+\$\w+)
+      push: scope:source.php#single-expression
+    - match: (\$)(\w+)
+      captures:
+        1: punctuation.definition.variable.symfony
+        2: variable.other.symfony
+    - match: (?=[A-Z]\w*\\)
+      push: scope:source.php#class-name
+
+  block-key-implicit:
+    - meta_prepend: true
+    - match: (class)(:)
+      captures:
+        1: meta.mapping.key.yaml meta.string.yaml string.unquoted.plain.out.yaml
+        2: meta.mapping.yaml punctuation.separator.key-value.mapping.yaml
+      set:
+        - scope:source.php#class-name
+    - match: (namespace)(:)
+      captures:
+        1: meta.mapping.key.yaml meta.string.yaml string.unquoted.plain.out.yaml
+        2: meta.mapping.yaml punctuation.separator.key-value.mapping.yaml
+      set:
+        - scope:source.php#class-name
+
+  flow-pair-key:
+    - meta_prepend: true
+    - match: (class)(:)\s*(')
+      captures:
+        1: meta.string.yaml string.unquoted.plain.in.yaml
+        2: punctuation.separator.key-value.mapping.yaml
+        3: meta.string.yaml string.quoted.single.yaml punctuation.definition.string.begin.yaml
+      embed: scope:source.php#class-name
+      escape: (')
+      escape_captures:
+        1: meta.string.yaml string.quoted.single.yaml punctuation.definition.string.end.yaml
+      pop: 1
