@@ -169,9 +169,9 @@ services:
 #           ^ punctuation.definition.block.sequence.item.yaml
 #             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.string.yaml string.quoted.single.yaml
 #             ^ punctuation.definition.string.begin.yaml
-#              ^^^^ variable.namespace.php.symfony
-#              ^ punctuation.definition.variable.symfony
-#                  ^^^^^^^^^^^^^^^^^^^^^^^^^ meta.path.php
+#              ^ variable.namespace.php.symfony punctuation.definition.variable.symfony
+#               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.path.php
+#               ^^^ variable.namespace.php
 #                  ^ punctuation.accessor.namespace.php
 #                   ^^^^^^^ variable.namespace.php
 #                          ^ punctuation.accessor.namespace.php
@@ -367,3 +367,21 @@ security:
 #                                                                         ^^^^^^^^^^^^^^ meta.string.yaml string.unquoted.plain.in.yaml
 #                                                                                       ^ punctuation.definition.sequence.end.yaml
 #                                                                                         ^ meta.mapping.yaml punctuation.definition.mapping.end.yaml
+
+services:
+  App\Email\NewsletterManager:
+    # the first argument is the class and the second argument is the static method
+    factory: ['App\Email\NewsletterManagerStaticFactory', 'createNewsletterManager']
+
+  App\Email\NewsletterManager:
+    factory: [null, 'create']
+    arguments:
+        $sender: 'fabien@symfony.com'
+
+  # first, create a service for the factory
+  App\Email\NewsletterManagerFactory: ~
+
+  # second, use the factory service as the first argument of the 'factory'
+  # option and the factory method as the second argument
+  App\Email\NewsletterManager:
+    factory: ['@App\Email\NewsletterManagerFactory', 'createNewsletterManager']

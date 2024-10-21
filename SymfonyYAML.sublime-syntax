@@ -30,13 +30,16 @@ contexts:
       scope: variable.function.symfony
       captures:
         1: punctuation.definition.variable.symfony
-    - match: (@)[A-Z]\w*(?=\\)
+    - match: (@)(?=[A-Z]\w*\\)
       scope: variable.namespace.php.symfony
       captures:
         1: punctuation.definition.variable.symfony
       push:
         - scope:source.php#class-name
     - match: \w+@\w+ # eat email addresses so they don't scope as references
+    - match: (?=\b(?:[A-Z]\w*\\)+[A-Z]\w*')
+      push:
+        - scope:source.php#class-name
 
   property-body:
     - meta_prepend: true
