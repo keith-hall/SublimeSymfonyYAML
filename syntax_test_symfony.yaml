@@ -331,3 +331,39 @@ parameters:
 #                ^^^^^^^^^^^^^ meta.string.yaml string.quoted.single.yaml
 #                ^ punctuation.definition.string.begin.yaml
 #                            ^ punctuation.definition.string.end.yaml
+
+security:
+  access_control:
+    - { path: ^/some_path/v1/(rest|async)-docs.*, roles: SOME_ROLE, ips: [192.168.0.1/16] }
+#   ^ punctuation.definition.block.sequence.item.yaml
+#     ^^ meta.mapping.yaml
+#     ^ punctuation.definition.mapping.begin.yaml
+#       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.mapping.key.yaml
+#       ^^^^ meta.string.yaml string.unquoted.plain.in.yaml
+#           ^ punctuation.separator.key-value.mapping.yaml
+#            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.regexp
+#            ^^^^^^^^^^^^^^^^ meta.mode.basic.regexp
+#             ^ keyword.control.anchor.regexp
+#                            ^^^^^^^^^^^^ meta.group.regexp meta.mode.basic.regexp
+#                            ^ punctuation.section.group.begin.regexp
+#                                 ^ keyword.operator.alternation.regexp
+#                                       ^ punctuation.section.group.end.regexp
+#                                        ^^^^^^^ meta.mode.basic.regexp
+#                                             ^ keyword.other.any.regexp
+#                                              ^ keyword.operator.quantifier.regexp
+#                                               ^^ meta.mapping.yaml
+#                                               ^ punctuation.separator.sequence.yaml
+#                                                 ^^^^^ meta.mapping.key.yaml meta.string.yaml string.unquoted.plain.in.yaml
+#                                                      ^ meta.mapping.yaml punctuation.separator.key-value.mapping.yaml
+#                                                       ^^^^^^^^^^ meta.mapping.value.yaml
+#                                                        ^^^^^^^^^ meta.string.yaml string.unquoted.plain.in.yaml
+#                                                                 ^^ meta.mapping.yaml
+#                                                                 ^ punctuation.separator.sequence.yaml
+#                                                                   ^^^ meta.mapping.key.yaml meta.string.yaml string.unquoted.plain.in.yaml
+#                                                                      ^ meta.mapping.yaml punctuation.separator.key-value.mapping.yaml
+#                                                                       ^^^^^^^^^^^^^^^^^^ meta.mapping.value.yaml
+#                                                                        ^^^^^^^^^^^^^^^^ meta.sequence.flow.yaml
+#                                                                        ^ punctuation.definition.sequence.begin.yaml
+#                                                                         ^^^^^^^^^^^^^^ meta.string.yaml string.unquoted.plain.in.yaml
+#                                                                                       ^ punctuation.definition.sequence.end.yaml
+#                                                                                         ^ meta.mapping.yaml punctuation.definition.mapping.end.yaml

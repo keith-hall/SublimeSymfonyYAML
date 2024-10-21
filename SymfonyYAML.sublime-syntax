@@ -97,3 +97,13 @@ contexts:
       escape_captures:
         1: meta.string.yaml string.quoted.single.yaml punctuation.definition.string.end.yaml
       pop: 1
+
+  flow-scalar-plain-in-body:
+    - meta_prepend: true
+    - match: (path)(:)
+      captures:
+        1: meta.string.yaml string.unquoted.plain.in.yaml
+        2: punctuation.separator.key-value.mapping.yaml
+      embed: scope:source.regexp
+      escape: '{{_flow_scalar_end_plain_in}}'
+      pop: 1
