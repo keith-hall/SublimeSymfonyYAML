@@ -78,6 +78,12 @@ contexts:
         2: meta.mapping.yaml punctuation.separator.key-value.mapping.yaml
       set:
         - scope:source.php#class-name
+    - match: \b(when)(@)(\w+)(?=:)
+      scope: meta.mapping.key.yaml meta.string.yaml string.unquoted.plain.out.yaml
+      captures:
+        1: keyword.control.conditional.if.symfony
+        2: punctuation.separator.key-value.symfony
+        3: constant.language.symfony
 
   flow-pair-key:
     - meta_prepend: true

@@ -292,6 +292,11 @@ webpack_encore:
 
 # cache is enabled only in the "prod" environment
 when@prod:
+#^^^^^^^^ meta.mapping.key.yaml meta.mapping.key.yaml meta.string.yaml string.unquoted.plain.out.yaml
+#^^^ keyword.control.conditional.if.symfony
+#   ^ punctuation.separator.key-value.symfony
+#    ^^^^ constant.language.symfony
+#        ^ meta.mapping.yaml punctuation.separator.key-value.mapping.yaml
     webpack_encore:
         cache: true
 
@@ -306,6 +311,13 @@ when@prod: &webpack_prod
     webpack_encore:
         # ...
 when@test: *webpack_prod
+#^^^^^^^^ meta.mapping.key.yaml meta.mapping.key.yaml meta.string.yaml string.unquoted.plain.out.yaml
+#^^^ keyword.control.conditional.if.symfony
+#   ^ punctuation.separator.key-value.symfony
+#    ^^^^ constant.language.symfony
+#        ^ meta.mapping.yaml punctuation.separator.key-value.mapping.yaml
+#          ^ keyword.control.flow.alias.yaml punctuation.definition.alias.yaml
+#           ^^^^^^^^^^^^ variable.other.alias.yaml
 
 parameters:
     # if the SECRET env var value is not defined anywhere, Symfony uses this value
