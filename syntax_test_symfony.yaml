@@ -201,24 +201,24 @@ services:
 #                      ^ punctuation.definition.sequence.begin.yaml
 #                       ^^^^^^^^ meta.property.yaml storage.type.tag-handle.yaml
 #                                ^ meta.mapping.yaml punctuation.definition.mapping.begin.yaml
-#                                 ^^^^^^^^ meta.mapping.key.yaml
-#                                 ^^^^^ meta.string.yaml string.unquoted.plain.in.yaml
-#                                      ^ punctuation.separator.key-value.mapping.yaml
-#                                        ^ meta.string.yaml string.quoted.single.yaml punctuation.definition.string.begin.yaml
+#                                 ^^^^^ meta.mapping.key.yaml meta.string.yaml string.unquoted.plain.in.yaml
+#                                      ^ meta.mapping.yaml punctuation.separator.key-value.mapping.yaml
+#                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.mapping.value.yaml
+#                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^ meta.string.yaml string.quoted.single.yaml
+#                                        ^ punctuation.definition.string.begin.yaml
 #                                         ^^^^^^^^^^^^^^^^^^^^^^^^ meta.path.php
 #                                         ^^^ variable.namespace.php
 #                                            ^ punctuation.accessor.namespace.php
 #                                             ^^^^^^^ variable.namespace.php
 #                                                    ^ punctuation.accessor.namespace.php
 #                                                     ^^^^^^^^^^^^ support.class.php
-#                                                                 ^ meta.mapping.key.yaml meta.string.yaml string.quoted.single.yaml punctuation.definition.string.end.yaml
+#                                                                 ^ punctuation.definition.string.end.yaml
 #                                                                  ^ meta.mapping.yaml punctuation.definition.mapping.end.yaml
 #                                                                   ^ punctuation.separator.sequence.yaml
 #                                                                     ^^^^^^^^ meta.string.yaml string.quoted.single.yaml
 #                                                                     ^ punctuation.definition.string.begin.yaml
 #                                                                            ^ punctuation.definition.string.end.yaml
 #                                                                             ^ punctuation.definition.sequence.end.yaml
-
 
 # config/packages/api_platform.yaml
 api_platform:
