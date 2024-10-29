@@ -1,0 +1,37 @@
+name: Syntax Tests
+
+on:
+  push:
+    paths:
+      - '.github/workflows/syntax.yaml'
+      - '**.sublime-syntax'
+      - '**/syntax_test*'
+      - '**.tmPreferences'
+  pull_request:
+    paths:
+      - '.github/workflows/syntax.yaml'
+      - '**.sublime-syntax'
+      - '**/syntax_test*'
+      - '**.tmPreferences'
+
+jobs:
+  main:
+    name: Syntax Tests (${{ matrix.build }})
+    strategy:
+      matrix:
+        include:
+          - build: 4153
+            packages: v4153
+          - build: latest
+            packages: master
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    env:
+      package_name: SymfonyYAML
+    steps:
+      - uses: actions/checkout@v3
+      - uses: SublimeText/syntax-test-action@v2
+        with:
+          build: ${{ matrix.build }}
+          default_packages: ${{ matrix.packages }}
+          
